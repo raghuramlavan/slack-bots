@@ -16,8 +16,17 @@ MESSAGE_BLOCK = {
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "Result is"
+				"text": "This is a section block with a button."
 			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Click Me"
+				},
+				"value": "click_me_123",
+				"action_id": "button"
+			}
 		},
 		{
 			"type": "actions",
@@ -27,7 +36,7 @@ MESSAGE_BLOCK = {
 					"type": "button",
 					"text": {
 						"type": "plain_text",
-						"text": "Play Again"
+						"text": "Primary Button"
 					},
 					"style": "primary",
 					"value": "click_me_456"
@@ -36,13 +45,13 @@ MESSAGE_BLOCK = {
 					"type": "button",
 					"text": {
 						"type": "plain_text",
-						"text": "Thank You"
+						"text": "Link Button"
 					},
 					"url": "https://api.slack.com/block-kit"
 				}
 			]
 		}
-	]
+        ]
 }
 @app.route('/slack/add',methods =['POST'])
 def add():
@@ -62,10 +71,11 @@ def message(payload):
         else:
             result = "Tails"
         message =f"The result is {result}"
+        print(MESSAGE_BLOCK["blocks"][0])
         
-        MESSAGE_BLOCK["blocks"]["section"]["text"]["text"]=message
+        MESSAGE_BLOCK["blocks"][0]["text"]["text"]=message
 
-        message_to_send ={"channel":channel_id, MESSAGE_BLOCK}
+        message_to_send =dict(list({"channel":channel_id}.items())+list(MESSAGE_BLOCK.items()))
 
         return slack_web_client.chat_postMessage(**message_to_send)
 
