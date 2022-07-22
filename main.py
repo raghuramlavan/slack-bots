@@ -11,11 +11,38 @@ slack_event_adaptor = SlackEventAdapter(os.environ.get("SLACK_ET"),"/slack/event
 slack_web_client =WebClient(token=os.environ.get("SLACK_BT"))
 
 MESSAGE_BLOCK = {
-    "type":"section",
-    "text":{
-        "type":"mrkdwn",
-        "text":""
-    }
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Result is"
+			},
+		},
+		{
+			"type": "actions",
+			"block_id": "actionblock789",
+			"elements": [
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"text": "Play Again"
+					},
+					"style": "primary",
+					"value": "click_me_456"
+				},
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"text": "Thank You"
+					},
+					"url": "https://api.slack.com/block-kit"
+				}
+			]
+		}
+	]
 }
 @app.route('/slack/add',methods =['POST'])
 def add():
@@ -36,9 +63,9 @@ def message(payload):
             result = "Tails"
         message =f"The result is {result}"
         
-        MESSAGE_BLOCK["text"]["text"]=message
+        MESSAGE_BLOCK["blocks"]["section"]["text"]["text"]=message
 
-        message_to_send ={"channel":channel_id, "blocks":[MESSAGE_BLOCK]}
+        message_to_send ={"channel":channel_id, MESSAGE_BLOCK}
 
         return slack_web_client.chat_postMessage(**message_to_send)
 
