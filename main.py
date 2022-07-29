@@ -54,7 +54,8 @@ MESSAGE_BLOCK = {
         ]
 }
 @app.route('/slack/add',methods =['POST'])
-def add(payload):
+def add():
+	payload = json.loads(request.form["payload"])
 	print(payload)
 	return Response(), 200
 
@@ -84,7 +85,7 @@ def message(payload):
 
 @app.route('/answerMe',methods =['POST'])
 def answerMe(payload):
-	print(payload)
+	payload = json.loads(request.form["payload"])
 	return Response(), 200
 
 
