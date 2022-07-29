@@ -45,7 +45,8 @@ MESSAGE_BLOCK = {
 	]
 }
 @app.route('/slack/add',methods =['POST'])
-def add():
+def add(payload):
+	print(payload)
     return Response(), 200
 
 @slack_event_adaptor.on("message")
@@ -62,12 +63,20 @@ def message(payload):
         else:
             result = "Tails"
         message =f"The result is {result}"
+        print()
         
         MESSAGE_BLOCK["blocks"]["section"]["text"]["text"]=message
 
         message_to_send ={"channel":channel_id, MESSAGE_BLOCK}
 
         return slack_web_client.chat_postMessage(**message_to_send)
+
+@app.route('/answerMe',methods =['POST'])
+def answerMe(payload):
+	print(payload)
+    return Response(), 200
+
+
 
 if __name__ =='__main__':
     app.run(host="0.0.0.0",port=8080)
